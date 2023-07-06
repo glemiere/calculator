@@ -30,8 +30,12 @@ or
 
 ## Testing
 `npm run test` but I didn't write any, maybe if y'all hire me though :D
-Note for self:
+
+### Note for self:
+
 Could make a sanitazing function to avoid all the possible crappy inputs like a+b-t, but that would require some serious regex magic.
 Also could test the calculate function against eval.
 Finally this does not support percentages, could be fun to add but quite a bit of work.
+
+###### Developed with ❤️ by @glemiere
 
