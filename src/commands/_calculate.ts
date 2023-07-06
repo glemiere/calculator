@@ -67,7 +67,6 @@ export default class Calculate implements Command {
             return this.display;
         }
     }
-    
 
     public checkOperationValidity(input: string) :[boolean, string] {
         const checkIfFinishWithEqual = (input: string) => input[input.length - 1] === '=' ? true : false;
