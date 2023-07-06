@@ -14,12 +14,27 @@ export default class Calculate implements Command {
         while (true) {
             try {
                 input = await new Prompt('Enter operation (or "exit" to quit):').exec();
-                logger.success(this._calculate(input));
+                this._processInput(input);
+                logger.success(this.display);
 
             } catch (error) {
                 logger.error(error);
             }
         }
+    }
+
+    private _processInput(input: string): void {
+        const commands: Record<string, Function> = {
+            exit: () => process.exit(0),
+            c: () => {
+                this._resetState();
+                input = '';
+            }
+        };
+        const command = commands[input];
+
+        if (command) command();
+        this.display = this._calculate(input);
     }
 
     private _calculate(input: string) :number {
