@@ -1,0 +1,34 @@
+{
+  "name": "calculator-cli",
+  "version": "0.0.1",
+  "description": "Command line calculator.",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "rm -rf ./lib && tsc -p .",
+    "build:dev": "rm -rf ./lib && tsc -b . --watch",
+    "install:global": "npm install -g",
+    "start": "node lib/index.js"
+  },
+  "keywords": [
+    "cli",
+    "typescript",
+    "nodejs",
+    "calculator"
+  ],
+  "author": "Will Le Mière",
+  "license": "MIT",
+  "bin": {
+    "calculator": "./lib/index.js"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.2",
+    "@types/node": "^18.11.9",
+    "jest": "^29.6.0",
+    "nodemon": "^2.0.20",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tslint": "^5.20.1",
+    "typescript": "^4.8.4"
+  }
+}
