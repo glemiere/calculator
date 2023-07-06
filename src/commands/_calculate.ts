@@ -6,7 +6,7 @@ export default class Calculate implements Command {
     private display: number = 0;
     private operationStack: Array<string> = ["0"];
 
-    async exec(): Promise<void> {
+    public async exec(): Promise<void> {
         let input;
         logger.success(this.display);
 
@@ -14,7 +14,7 @@ export default class Calculate implements Command {
         while (true) {
             try {
                 input = await new Prompt('Enter operation (or "exit" to quit):').exec();
-                this._processInput(input);
+                this.processInput(input);
                 logger.success(this.display);
 
             } catch (error) {
@@ -23,18 +23,56 @@ export default class Calculate implements Command {
         }
     }
 
-    private _processInput(input: string): void {
+    public processInput(input: string): void {
         const commands: Record<string, Function> = {
             exit: () => process.exit(0),
             c: () => {
                 this._resetState();
-                input = '';
+                return;
             }
         };
         const command = commands[input];
 
         if (command) command();
-        this.display = this._calculate(input);
+        this.processOperation(input);
+    }
+
+    public processOperation(input: string) :void {
+        const [doesFinishWithEqual, stackableInput] = this.checkOperationValidity(input);
+        const stack = this._addOperationToStack(stackableInput);
+
+        if (doesFinishWithEqual) {
+            const elements = this.prepareForCalculation(stack);
+            this._setDisplay(this._calculate(elements));
+        }
+
+        if (!doesFinishWithEqual) {
+
+        }
+    }
+
+    public checkOperationValidity(input: string) :[boolean, string] {
+        const checkIfFinishWithEqual = (input: string) => input[input.length - 1] === '=' ? true : false;
+        const doesFinishWithEqual = checkIfFinishWithEqual(input);
+
+        if (this._isTryingToDivideByZero(input))
+            throw new Error('Dividing by zero is not allowed. This entire input is ignored.');
+
+        if (doesFinishWithEqual)
+            input = input.slice(0, input.length - 1);
+
+        return [doesFinishWithEqual, input];
+    }
+
+    public prepareForCalculation(stack: Array<string>) :Array<any> {
+        let toCompute = this._removeLeadingZeroInts(stack.join(''));
+        toCompute = this._applyNegations(toCompute);
+
+        const splitByOperators: RegExp = /(\*|\/|\+|\-)/;
+        const assignType: any = (element: string) => isNaN(parseFloat(element)) ? element : parseFloat(element);
+        const elements: Array<any> = toCompute.split(splitByOperators).map(assignType);
+
+        return elements;
     }
 
     private _applyNegations(input: string) :string {
@@ -77,10 +115,8 @@ export default class Calculate implements Command {
         this.operationStack = ["0"];
     }
 
-    private _calculate(input: string) :number {
-        const splitByOperators: RegExp = /(\*|\/|\+|\-)/;
-        const assignType: any = (element: string) => isNaN(parseFloat(element)) ? element : parseFloat(element);
-        const elements: Array<any> = input.split(splitByOperators).map(assignType);
+    private _calculate(elements: Array<any>) :number {
+
         const operationsInOrder: Array<Record<string, (a: number, b: number) => number>> = [
             {
                 '*': (a: number, b: number) => a * b,
