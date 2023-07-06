@@ -1,5 +1,5 @@
 # Calculator CLI
-The only thing youn really care about is [the file where the magic happens](https://github.com/glemiere/calculator/blob/main/src/commands/_calculate.ts).
+The only thing you really care about is [the file where the magic happens](https://github.com/glemiere/calculator/blob/main/src/commands/_calculate.ts).
 
 ## Installation
  `npm run install:global` (global install)
