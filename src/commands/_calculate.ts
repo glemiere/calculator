@@ -41,17 +41,33 @@ export default class Calculate implements Command {
         const [doesFinishWithEqual, stackableInput] = this.checkOperationValidity(input);
         const stack = this._addOperationToStack(stackableInput);
 
-        console.log(stack);
-
         if (doesFinishWithEqual) {
             const elements = this.prepareForCalculation(stack);
-            this._setDisplay(this._calculate(elements));
+            const result = this._calculate(elements);
+            this._setDisplay(result);
+            this._setOperationsStack([result.toString()]);
         }
 
         if (!doesFinishWithEqual) {
-
+            const display = this.consolidateUserInput(stack);
+            this._setDisplay(display);
         }
     }
+
+    public consolidateUserInput(stack: Array<string>) :number {
+        const combinedStack = stack.join('');
+        const splitByOperators = combinedStack.split(/[\+\-\*\/]/);
+
+        let lastNumber = splitByOperators[splitByOperators.length - 1];
+    
+        if (lastNumber) {
+            const toDisplay = this._applyNegations(lastNumber);
+            return parseFloat(toDisplay);
+        } else {
+            return this.display;
+        }
+    }
+    
 
     public checkOperationValidity(input: string) :[boolean, string] {
         const checkIfFinishWithEqual = (input: string) => input[input.length - 1] === '=' ? true : false;
@@ -118,7 +134,6 @@ export default class Calculate implements Command {
     }
 
     private _calculate(elements: Array<any>) :number {
-
         const operationsInOrder: Array<Record<string, (a: number, b: number) => number>> = [
             {
                 '*': (a: number, b: number) => a * b,
