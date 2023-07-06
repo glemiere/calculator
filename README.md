@@ -27,3 +27,6 @@ or
 or 
 
 `calculator calculate` (global install)
+
+## Testing
+`npm run test` but I didn't write any, maybe if y'all hire me though :D
