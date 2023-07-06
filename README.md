@@ -11,6 +11,9 @@ CLI calculator.
 ## Building
 `npm run build`
 
+## Dev server
+`npm run build:dev`
+
 ## Running
 `npm run start` (local install)
 
