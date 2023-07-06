@@ -9,7 +9,7 @@ export default class Calculate implements Command {
     async exec(): Promise<void> {
         let input;
         logger.success(this.display);
-        
+
         // Constantly prompts users.
         while (true) {
             try {
@@ -55,6 +55,11 @@ export default class Calculate implements Command {
         });
 
         return elements[0];
+    }
+
+    private _isTryingToDivideByZero(input: string) {
+        const divisionByZeroRegex = /\/0(?!.\d)/g;
+        return divisionByZeroRegex.test(input);
     }
 
     private _addOperationToStack(input: string) :Array<string> {
