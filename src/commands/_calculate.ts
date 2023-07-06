@@ -28,7 +28,7 @@ export default class Calculate implements Command {
             exit: () => process.exit(0),
             c: () => {
                 this._resetState();
-                return;
+                input = '';
             }
         };
         const command = commands[input];
@@ -40,6 +40,8 @@ export default class Calculate implements Command {
     public processOperation(input: string) :void {
         const [doesFinishWithEqual, stackableInput] = this.checkOperationValidity(input);
         const stack = this._addOperationToStack(stackableInput);
+
+        console.log(stack);
 
         if (doesFinishWithEqual) {
             const elements = this.prepareForCalculation(stack);
