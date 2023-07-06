@@ -1,4 +1,4 @@
-# Hi/Hello Challenge CLI
+# Calculator CLI
 The only thing youn really care about is [the file where the magic happens](https://github.com/glemiere/calculator/blob/main/src/commands/_calculate.ts).
 
 ## Installation
