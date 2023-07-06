@@ -37,6 +37,46 @@ export default class Calculate implements Command {
         this.display = this._calculate(input);
     }
 
+    private _applyNegations(input: string) :string {
+        const negationPattern = '(!+)?';
+        const numberPattern = '(-?\\d+(\\.\\d+)?)';
+        const combinedPattern = new RegExp(`${negationPattern}${numberPattern}${negationPattern}`, 'g');
+    
+        return input.replace(combinedPattern, (match, preNegations = '', number, _, postNegations = '') => {            
+            const negationsCount = preNegations.length + postNegations.length;
+            const num = parseFloat(number);
+            const negatedNumber = negationsCount % 2 === 0 ? num : -num;
+            return negatedNumber.toString();
+        });
+    }
+
+    private _removeLeadingZeroInts(input: string) :string {
+        return input.replace(/\b0+([1-9]\d*|0\.)/g, '$1');
+    }
+
+    private _isTryingToDivideByZero(input: string) {
+        const divisionByZeroRegex = /\/0(?!.\d)/g;
+        return divisionByZeroRegex.test(input);
+    }
+
+    private _addOperationToStack(input: string) :Array<string> {
+        this.operationStack.push(input);
+        return this.operationStack;
+    }
+
+    private _setOperationsStack(stack: Array<string>) :Array<string> {
+        return this.operationStack = stack;
+    }
+
+    private _setDisplay(display: number) :number {
+        return this.display = display;
+    }
+
+    private _resetState() :void {
+        this.display = 0;
+        this.operationStack = ["0"];
+    }
+
     private _calculate(input: string) :number {
         const splitByOperators: RegExp = /(\*|\/|\+|\-)/;
         const assignType: any = (element: string) => isNaN(parseFloat(element)) ? element : parseFloat(element);
@@ -70,28 +110,5 @@ export default class Calculate implements Command {
         });
 
         return elements[0];
-    }
-
-    private _isTryingToDivideByZero(input: string) {
-        const divisionByZeroRegex = /\/0(?!.\d)/g;
-        return divisionByZeroRegex.test(input);
-    }
-
-    private _addOperationToStack(input: string) :Array<string> {
-        this.operationStack.push(input);
-        return this.operationStack;
-    }
-
-    private _setOperationsStack(stack: Array<string>) :Array<string> {
-        return this.operationStack = stack;
-    }
-
-    private _setDisplay(display: number) :number {
-        return this.display = display;
-    }
-
-    private _resetState() :void {
-        this.display = 0;
-        this.operationStack = ["0"];
     }
 }
