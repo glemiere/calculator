@@ -3,8 +3,13 @@ import Prompt from '../cli/prompt';
 import { Command } from '../interfaces/command.interface';
 
 export default class Calculate implements Command {
+    private display: number = 0;
+    private operationStack: Array<string> = ["0"];
+
     async exec(): Promise<void> {
         let input;
+        logger.success(this.display);
+        
         // Constantly prompts users.
         while (true) {
             try {
@@ -50,5 +55,23 @@ export default class Calculate implements Command {
         });
 
         return elements[0];
+    }
+
+    private _addOperationToStack(input: string) :Array<string> {
+        this.operationStack.push(input);
+        return this.operationStack;
+    }
+
+    private _setOperationsStack(stack: Array<string>) :Array<string> {
+        return this.operationStack = stack;
+    }
+
+    private _setDisplay(display: number) :number {
+        return this.display = display;
+    }
+
+    private _resetState() :void {
+        this.display = 0;
+        this.operationStack = ["0"];
     }
 }
